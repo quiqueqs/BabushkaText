@@ -16,7 +16,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 201
-        versionName "2.0"
+        versionName "1.0"
         signingConfig signingConfigs.arthas
     }
     buildTypes {
