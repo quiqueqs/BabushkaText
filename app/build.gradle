@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        arthas {
-            keyAlias 'arthas'
-            keyPassword 'arthas'
-            storeFile file('H:/arthas/arthas.jks')
-            storePassword 'arthas'
-        }
-    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     defaultConfig {
@@ -17,7 +9,6 @@ android {
         targetSdkVersion 23
         versionCode 201
         versionName "1.0"
-        signingConfig signingConfigs.arthas
     }
     buildTypes {
         release {
@@ -36,4 +27,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':babushkatext')
+//    compile 'com.github.Aarthas:BabushkaText:2.1'
 }
