@@ -32,7 +32,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // Display "9.5 excellent!"
 
         final BabushkaText babushka1 = (BabushkaText)findViewById(R.id.text);
