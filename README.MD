@@ -9,6 +9,28 @@ BabushkaText is a custom `TextView` which lets you customize the styling of part
  * Eliminate `setSpan(Object what, int start, int end, int flags)` calls by using more convenient
  methods such as `.style(Typeface.BOLD)`, `.superscript()` and others.
 
+To get a Git project into your build:
+
+Step 1. Add the JitPack repository to your build file
+
+gradle
+maven
+sbt
+leiningen
+Add it in your root build.gradle at the end of repositories:
+
+	allprojects {
+		repositories {
+			...
+			maven { url "https://jitpack.io" }
+		}
+	}
+Step 2. Add the dependency
+
+	dependencies {
+	        compile 'com.github.Aarthas:BabushkaText:2.2'
+	}
+	
 What can I do with BabushkaText?
 --------
 Examples of different styles. Each one is a **single** TextView.
