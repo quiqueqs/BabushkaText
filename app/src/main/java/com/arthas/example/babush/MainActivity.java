@@ -15,7 +15,7 @@
  *
  * @author Henrique Boregio (hboregio@gmail.com)
  */
-package com.example;
+package com.arthas.example.babush;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -33,6 +33,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         // Display "9.5 excellent!"
+
         final BabushkaText babushka1 = (BabushkaText)findViewById(R.id.text);
         babushka1.addPiece(new BabushkaText.Piece.Builder("  9.5  ")
                 .backgroundColor(Color.parseColor("#073680"))

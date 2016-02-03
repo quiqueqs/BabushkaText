@@ -40,121 +40,123 @@ import java.util.List;
 /**
  * BabushkaText is a TextView which lets you customize the styling of parts of your text via
  * Spannables, but without the hassle of having to deal directly with Spannable themselves.
- *
+ * <p/>
  * The idea behind a BabushkaText is that it is made up of {@code Piece}s. Each Piece represents a
  * section of the final text displayed by this TextView, and each Piece may be styled independently
  * from the other Pieces. When you put it all together, the final results is still a a single
  * TextView, but with a a very different graphic output.
- *
  */
-public class BabushkaText extends TextView {
+public class BabushkaText extends TextView
+{
 
     // some default params
-    private static int DEFAULT_ABSOLUTE_TEXT_SIZE;
+    private  int DEFAULT_ABSOLUTE_TEXT_SIZE;
     private static float DEFAULT_RELATIVE_TEXT_SIZE = 1;
 
     private List<Piece> mPieces;
 
+    public  int getPiecesCount(){
+        if (mPieces==null)
+            return 0;
+        return  mPieces.size();
+    }
     /**
      * Create a new instance of a this class
+     *
      * @param context
      */
-    public BabushkaText(Context context) {
+    public BabushkaText(Context context)
+    {
         super(context);
         init();
     }
 
-    public BabushkaText(Context context, AttributeSet attrs) {
+    public BabushkaText(Context context, AttributeSet attrs)
+    {
         super(context, attrs);
         init();
     }
 
-    public BabushkaText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BabushkaText(Context context, AttributeSet attrs, int defStyleAttr)
+    {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    private void init() {
+    private void init()
+    {
         mPieces = new ArrayList<>();
-        BabushkaText.DEFAULT_ABSOLUTE_TEXT_SIZE = (int) getTextSize();
+        DEFAULT_ABSOLUTE_TEXT_SIZE = (int) getTextSize();
+//        LogUtils.d("DEFAULT_ABSOLUTE_TEXT_SIZE  "+DEFAULT_ABSOLUTE_TEXT_SIZE);
+//        LogUtils.d("getTextSize  "+getTextSize());
+//        LogUtils.d("getText  "+getText());
     }
 
-    /**
-     * Use this method to add a {@link babushkatext.BabushkaText.Piece} to a BabushkaText.
-     * Each {@link babushkatext.BabushkaText.Piece } is added sequentially, so the
-     * order you call this method matters.
-     *
-     * @param aPiece the Piece
-     */
-    public void addPiece(Piece aPiece) {
+    public void addPiece(Piece aPiece)
+    {
         mPieces.add(aPiece);
     }
 
     /**
      * Adds a Piece at this specific location. The underlying data structure is a
-     * {@link java.util.List}, so expect the same type of behaviour.
+     * {@link List}, so expect the same type of behaviour.
      *
-     * @param aPiece the Piece to add.
+     * @param aPiece   the Piece to add.
      * @param location the index at which to add.
      */
-    public void addPiece(Piece aPiece, int location) {
+    public void addPiece(Piece aPiece, int location)
+    {
         mPieces.add(location, aPiece);
     }
 
     /**
      * Replaces the Piece at the specified location with this new Piece. The underlying data
-     * structure is a {@link java.util.List}, so expect the same type of behaviour.
+     * structure is a {@link List}, so expect the same type of behaviour.
      *
      * @param newPiece the Piece to insert.
      * @param location the index at which to insert.
      */
-    public void replacePieceAt(int location, Piece newPiece) {
+    public void replacePieceAt(int location, Piece newPiece)
+    {
         mPieces.set(location, newPiece);
     }
 
     /**
      * Removes the Piece at this specified location. The underlying data structure is a
-     * {@link java.util.List}, so expect the same type of behaviour.
+     * {@link List}, so expect the same type of behaviour.
      *
      * @param location the index of the Piece to remove
      */
-    public void removePiece(int location) {
+    public void removePiece(int location)
+    {
         mPieces.remove(location);
     }
 
-    /**
-     * Get a specific {@link babushkatext.BabushkaText.Piece} in position index.
-     *
-     * @param location position of Piece (0 based)
-     * @return Piece o null if invalid index
-     */
-    public Piece getPiece(int location) {
-        if(location >= 0 && location < mPieces.size()) {
+    public Piece getPiece(int location)
+    {
+        if (location >= 0 && location < mPieces.size())
+        {
             return mPieces.get(location);
         }
 
         return null;
     }
 
-    /**
-     * Call this method when you're done adding {@link babushkatext.BabushkaText.Piece}s
-     * and want this TextView to display the final, styled version of it's String contents.
-     *
-     * You MUST also call this method whenever you make a modification to the text of a Piece that
-     * has already been displayed.
-     */
-    public void display() {
+    public void display()
+    {
 
         // generate the final string based on the pieces
         StringBuilder builder = new StringBuilder();
-        for(Piece aPiece : mPieces) {
+        for ( Piece aPiece : mPieces )
+        {
             builder.append(aPiece.text);
         }
 
         // apply spans
         int cursor = 0;
         SpannableString finalString = new SpannableString(builder.toString());
-        for(Piece aPiece : mPieces) {
+        for ( Piece aPiece : mPieces )
+        {
             applySpannablesTo(aPiece, finalString, cursor, cursor + aPiece.text.length());
             cursor += aPiece.text.length();
         }
@@ -163,46 +165,56 @@ public class BabushkaText extends TextView {
         setText(finalString);
     }
 
-    private void applySpannablesTo(Piece aPiece, SpannableString finalString, int start, int end) {
+    private void applySpannablesTo(Piece aPiece, SpannableString finalString, int start, int end)
+    {
 
-        if(aPiece.subscript) {
-            finalString.setSpan(new SubscriptSpan(), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (aPiece.subscript)
+        {
+            finalString.setSpan(new SubscriptSpan(), start, end, Spannable
+                    .SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if(aPiece.superscript) {
-            finalString.setSpan(new SuperscriptSpan(), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (aPiece.superscript)
+        {
+            finalString.setSpan(new SuperscriptSpan(), start, end, Spannable
+                    .SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if(aPiece.strike) {
-            finalString.setSpan(new StrikethroughSpan(), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (aPiece.strike)
+        {
+            finalString.setSpan(new StrikethroughSpan(), start, end, Spannable
+                    .SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if(aPiece.underline) {
-            finalString.setSpan(new UnderlineSpan(), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (aPiece.underline)
+        {
+            finalString.setSpan(new UnderlineSpan(), start, end, Spannable
+                    .SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         // style
-        finalString.setSpan(new StyleSpan(aPiece.style), start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        finalString.setSpan(new StyleSpan(aPiece.style), start, end, Spannable
+                .SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // absolute text size
-        finalString.setSpan(new AbsoluteSizeSpan(aPiece.textSize), start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (aPiece.textSize==0)
+        {
+            aPiece.textSize = DEFAULT_ABSOLUTE_TEXT_SIZE;
+        }
+        finalString.setSpan(new AbsoluteSizeSpan(aPiece.textSize), start, end, Spannable
+                .SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // relative text size
-        finalString.setSpan(new RelativeSizeSpan(aPiece.textSizeRelative), start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        finalString.setSpan(new RelativeSizeSpan(aPiece.textSizeRelative), start, end, Spannable
+                .SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // text color
-        finalString.setSpan(new ForegroundColorSpan(aPiece.textColor), start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        finalString.setSpan(new ForegroundColorSpan(aPiece.textColor), start, end, Spannable
+                .SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // background color
-        if(aPiece.backgroundColor != -1) {
+        if (aPiece.backgroundColor != -1)
+        {
             finalString.setSpan(new BackgroundColorSpan(aPiece.backgroundColor), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -211,34 +223,28 @@ public class BabushkaText extends TextView {
     /**
      * Resets the styling of this view and sets it's content to an empty String.
      */
-    public void reset() {
+    public void reset()
+    {
         mPieces = new ArrayList<>();
         setText("");
     }
 
     /**
-    * Change text color of all pieces of textview.
-    */
-    public void changeTextColor(int textColor) {
-        for (Piece mPiece : mPieces) {
+     * Change text color of all pieces of textview.
+     */
+    public void changeTextColor(int textColor)
+    {
+        for ( Piece mPiece : mPieces )
+        {
             mPiece.setTextColor(textColor);
         }
         display();
     }
 
-    /**
-     * A Piece represents a part of the text that you want to style. Say for example you want this
-     * BabushkaText to display "Hello World" such that "Hello" is displayed in Bold and "World" is
-     * displayed in Italics. Since these have different styles, they are both separate Pieces.
-     *
-     * You create a Piece by using it's {@link babushkatext.BabushkaText.Piece.Builder}
-     *
-     */
-    public static class Piece {
+    public static class Piece
+    {
 
-        private String text;
-        private int textColor;
-        private final int textSize;
+        private  int textSize;
         private final int backgroundColor;
         private final float textSizeRelative;
         private final int style;
@@ -246,8 +252,11 @@ public class BabushkaText extends TextView {
         private final boolean superscript;
         private final boolean strike;
         private final boolean subscript;
+        private String text;
+        private int textColor;
 
-        public Piece(Builder builder) {
+        public Piece(Builder builder)
+        {
             this.text = builder.text;
             this.textSize = builder.textSize;
             this.textColor = builder.textColor;
@@ -260,43 +269,28 @@ public class BabushkaText extends TextView {
             this.strike = builder.strike;
         }
 
-        /**
-         * Sets the text of this Piece. If you're creating a new Piece, you should do so using it's
-         * {@link babushkatext.BabushkaText.Piece.Builder}.
-         *
-         * Use this method if you want to modify the text of an existing Piece that is already
-         * displayed. After doing so, you MUST call {@code display()} for the changes to show up.
-         *
-         * @param text the text to display
-         */
-        public void setText(String text) {
+        public void setText(String text)
+        {
             this.text = text;
         }
 
 
-        /**
-         * Sets the text color of this Piece. If you're creating a new Piece, you should do so using it's
-         * {@link babushkatext.BabushkaText.Piece.Builder}.
-         *
-         * Use this method if you want to change the text color of an existing Piece that is already
-         * displayed. After doing so, you MUST call {@code display()} for the changes to show up.
-         *
-         * @param color of text (it is NOT android Color resources ID, use getResources().getColor(R.color.colorId) for it)
-         */
-		public void setTextColor(int textColor) {
-        	this.textColor = textColor;
-    	}
+        public void setTextColor(int textColor)
+        {
+            this.textColor = textColor;
+        }
 
         /**
          * Builder of Pieces
          */
-        public static class Builder {
+        public static class Builder
+        {
 
             // required
             private final String text;
 
             // optional
-            private int textSize = DEFAULT_ABSOLUTE_TEXT_SIZE;
+            private int textSize ;
             private int textColor = Color.BLACK;
             private int backgroundColor = -1;
             private float textSizeRelative = DEFAULT_RELATIVE_TEXT_SIZE;
@@ -311,7 +305,8 @@ public class BabushkaText extends TextView {
              *
              * @param text the text of this Piece
              */
-            public Builder(String text) {
+            public Builder(String text)
+            {
                 this.text = text;
             }
 
@@ -321,7 +316,8 @@ public class BabushkaText extends TextView {
              * @param textSize text size in pixels
              * @return a Builder
              */
-            public Builder textSize(int textSize) {
+            public Builder textSize(int textSize)
+            {
                 this.textSize = textSize;
                 return this;
             }
@@ -332,7 +328,8 @@ public class BabushkaText extends TextView {
              * @param textColor the color
              * @return a Builder
              */
-            public Builder textColor(int textColor) {
+            public Builder textColor(int textColor)
+            {
                 this.textColor = textColor;
                 return this;
             }
@@ -343,7 +340,8 @@ public class BabushkaText extends TextView {
              * @param backgroundColor the color
              * @return a Builder
              */
-            public Builder backgroundColor(int backgroundColor) {
+            public Builder backgroundColor(int backgroundColor)
+            {
                 this.backgroundColor = backgroundColor;
                 return this;
             }
@@ -354,7 +352,8 @@ public class BabushkaText extends TextView {
              * @param textSizeRelative relative text size
              * @return a Builder
              */
-            public Builder textSizeRelative(float textSizeRelative) {
+            public Builder textSizeRelative(float textSizeRelative)
+            {
                 this.textSizeRelative = textSizeRelative;
                 return this;
             }
@@ -362,10 +361,11 @@ public class BabushkaText extends TextView {
             /**
              * Sets a style to this Piece.
              *
-             * @param style see {@link android.graphics.Typeface}
+             * @param style see {@link Typeface}
              * @return a Builder
              */
-            public Builder style(int style) {
+            public Builder style(int style)
+            {
                 this.style = style;
                 return this;
             }
@@ -375,7 +375,8 @@ public class BabushkaText extends TextView {
              *
              * @return a Builder
              */
-            public Builder underline() {
+            public Builder underline()
+            {
                 this.underline = true;
                 return this;
             }
@@ -385,7 +386,8 @@ public class BabushkaText extends TextView {
              *
              * @return a Builder
              */
-            public Builder strike() {
+            public Builder strike()
+            {
                 this.strike = true;
                 return this;
             }
@@ -395,7 +397,8 @@ public class BabushkaText extends TextView {
              *
              * @return a Builder
              */
-            public Builder superscript() {
+            public Builder superscript()
+            {
                 this.superscript = true;
                 return this;
             }
@@ -405,18 +408,14 @@ public class BabushkaText extends TextView {
              *
              * @return a Builder
              */
-            public Builder subscript() {
+            public Builder subscript()
+            {
                 this.subscript = true;
                 return this;
             }
 
-            /**
-             * Creates a {@link babushkatext.BabushkaText.Piece} with the customized
-             * parameters.
-             *
-             * @return a Piece
-             */
-            public Piece build() {
+            public Piece build()
+            {
                 return new Piece(this);
             }
         }
